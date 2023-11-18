@@ -3,6 +3,8 @@
 typedef enum saloonsType{
 
 SMALL_SALOON,
+
+
 MEDIUM_SALOON,
 LARGE_SALOON
 
