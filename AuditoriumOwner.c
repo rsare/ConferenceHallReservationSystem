@@ -1,38 +1,104 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "AuditoriumOwner.h"
+#include <string.h>
+#include "Reservation.h"
+#define CALCULATE_TOTAL_PROFIT(reservations, reservationCount) ({ \
+    int totalProfitMacro = 0; \
+    for (int iMacro = 0; iMacro < reservationCount; iMacro++) { \
+        totalProfitMacro += reservations[iMacro].price; \
+    } \
+    printf("Total Profit : %d\n", totalProfitMacro); \
+})
+//return totalProfitMacro; gpt bunu eklettiriyor
+// bütün salonların sahibi auditoriumOwner diye bütün arrayleri burada tuttum
 
-//bütün salonların sahibi auditoriumOwner diye bütün arrayleri burada tuttum
-ConferenceHall saloonsKnowledge[500];
-Reservation reservations[500];
-Customer customers[500];
+struct ConferenceHall saloonsKnowledge[500];
+struct Reservation reservations[500];
+struct Customer customers[500];
 
-/*#define SALOON1_CAPACITY 50
-#define SALOON2_CAPACITY 100
-#define SALOON3_CAPACITY 150
+int reservationCount = 0;
+int conferenceHallCount = 0;
+int customerCount = 0;
 
-bool saloon1_full = false;
-bool saloon2_full = false;
-bool saloon3_full = false;*/
-
-// enum forReservationID {ID = 100};
-
-int resId = 100;
-
-Reservation createReservation(int reservationId, int price, char *purpose,int date, int hour, Customer customer, ConferenceHall conferenceHall)
+// FILE usage
+void writeConferenceHall(ConferenceHall conf)
 {
 
-//Reservation reservation = {.conferenceHall = conferenceHall,.customer = customer vs vs} böyle de olur
-Reservation reservation;
-reservation.reservationId = reservationId;
-reservation.price = price;
-reservation.purpose = purpose;
-reservation.date = date;
-reservation.hour = hour;
-reservation.customer = customer;
-reservation.conferenceHall = conferenceHall;
+   FILE *file = fopen("ConferenceHall.bin", "ab");
 
-reservations[reservationId-resId] = reservation;
+   if (file == NULL)
+   {
 
-return reservation;
+      printf("Error opening file for writing\n");
+
+      return;
+   }
+
+   int status = fwrite(&conf, sizeof(ConferenceHall), 1, file); // komple struct'ı yazdırma
+   fclose(file);
+
+   if (status != 1)
+   {
+      printf("Error while writing the file !!");
+   }
+}
+
+void readConferenceHall()
+{
+
+   FILE *file = fopen("ConferenceHall.bin", "rb");
+
+   if (file == NULL)
+   {
+      printf("Error opening file for writing.\n");
+      return;
+   }
+
+   int i = 0;
+   while (fread(&saloonsKnowledge[i], sizeof(ConferenceHall), 1, file) != 0)
+   {
+      i++;
+   }
+
+   fclose(file);
+}
+
+void deleteConferenceHall(int confHallId)
+{
+   FILE *tempFile = fopen("Temp.bin", "ab");
+
+   if (tempFile == NULL)
+   {
+      printf("Error opening file for writing.\n");
+      return;
+   }
+
+   for (int i = 0; i < conferenceHallCount; i++)
+   {
+      if (confHallId == saloonsKnowledge[i].id)
+      {
+         continue;
+      }
+      fwrite(&saloonsKnowledge[i], sizeof(ConferenceHall), 1, tempFile); // silmek istediğim şeye eşitse onu atlayıp yeniden yazıyorum
+   }
+   conferenceHallCount--;
+   fclose(tempFile);
+   remove("ConferenceHall.bin");
+   rename("Temp.bin", "ConferenceHall.bin");
+   readConferenceHall(); // yeniden okuması için
+}
+
+Customer *login(char *username, char *password) // NULL sadece pointerlar için C'de
+{
+
+   for (int i = 0; i < customerCount; i++)
+   {
+
+      if (strcmp(customers[i].username, username) == 0 && strcmp(customers[i].password, password) == 0)
+      {
+
+         return &customers[i];
+      }
+   }
+   return NULL;
 }

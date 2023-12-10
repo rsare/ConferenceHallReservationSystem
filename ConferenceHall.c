@@ -2,85 +2,63 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include "ConferenceHall.h"
+// #include "AuditoriumOwner.c"
 
-
-
-
-bool saloon1_full = false;
-bool saloon2_full = false;
-bool saloon3_full = false;
-
-bool isHallFull(struct ConferenceHall *self,int date, int hour)
+bool isHallFull(struct ConferenceHall *self, int date, int hour)
 {
-    switch (self->capacity)
+    for (int i = 0; i < reservationCount; i++)
     {
-    case 1:
-        return saloon1_full =  true;
-    case 2:
-        return saloon2_full = true;
-    case 3:
-        return saloon3_full = true;
 
-    default:
-        return false;
+        if (reservations[i].conferenceHall.id == self->id && reservations[i].date == date && reservations[i].hour == hour)
+        {
+            return true;
+        }
     }
+    return false; // hepsini kontrol etmeden else'e atlayıp false döndürmesin diye return for'un dışında
 }
 
-/* bool isFull = true;
-    printf("Please enter a date.");
-    scanf("%s\n",date);
-    printf("Please enter a hour.");
-    scanf("%s\n",hour);
+int idCH = 20;
+struct ConferenceHall createConferenceHall(int id, char *hallName, int capacity)
+{
 
-    if(date == true && hour == true){
-        printf("The conference hall is full on the entered date!");
-    }else{
-        printf("You can make a reservation for the conference hall.");
-    }
-*/
+    ConferenceHall ch1;
+    ch1.id = id;
+    strcpy(ch1.hallName, hallName);
+    ch1.capacity = capacity;
 
-/*#include <stdio.h>
-#include <stdbool.h>
+    saloonsKnowledge[id - idCH] = ch1;
+    conferenceHallCount++;
 
-// Örnek bir konferans salonu veri yapısı
-struct ConferenceRoom {
-    int day;
-    int month;
-    int year;
-    int hour;
-    int minute;
-    bool isOccupied;
-};
-
-// Fonksiyon: Konferans salonunun dolu olup olmadığını kontrol et
-bool isConferenceRoomOccupied(struct ConferenceRoom room, int checkDay, int checkMonth, int checkYear, int checkHour, int checkMinute) {
-    // İlgili tarih ve saat kontrolü
-    if (room.year == checkYear && room.month == checkMonth && room.day == checkDay &&
-        room.hour == checkHour && room.minute == checkMinute) {
-        return room.isOccupied;
-    } else {
-        return false; // Belirtilen tarih ve saatte salon dolu değil
-    }
+    return ch1;
 }
 
-int main() {
-    // Örnek bir konferans salonu oluşturuluyor
-    struct ConferenceRoom myConferenceRoom = {12, 11, 2023, 14, 30, true};
+struct ConferenceHall updateConferenceHall(int newId, char *newHallName, int newCapacity)
+{ // kendim
 
-    // Kontrol etmek istediğiniz tarih ve saat
-    int checkDay = 12;
-    int checkMonth = 11;
-    int checkYear = 2023;
-    int checkHour = 14;
-    int checkMinute = 30;
+    ConferenceHall updateConferenceHall;
 
-    // Fonksiyon çağrısı ile konferans salonunun durumunu kontrol et
-    if (isConferenceRoomOccupied(myConferenceRoom, checkDay, checkMonth, checkYear, checkHour, checkMinute)) {
-        printf("Konferans salonu dolu.\n");
-    } else {
-        printf("Konferans salonu bos.\n");
+    updateConferenceHall.id = newId;
+    strcpy(updateConferenceHall.hallName, newHallName);
+    updateConferenceHall.capacity = newCapacity;
+
+    saloonsKnowledge[newId - idCH] = updateConferenceHall;
+}
+
+int setPriceAccToCapacity(saloonsType saloonsType, int price)
+{
+    price = 500;
+    if (saloonsType == 0)
+    {
+        price += 100;
+    }
+    else if (saloonsType == 1)
+    {
+        price += 300;
+    }
+    else
+    {
+        price += 500;
     }
 
-    return 0;
+    return price;
 }
-*/

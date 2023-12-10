@@ -1,10 +1,12 @@
+#ifndef CONFERENCEHALL_H
+#define CONFERENCEHALL_H
+//#include "AuditoriumOwner.h"
+
 
 
 typedef enum saloonsType{
 
 SMALL_SALOON,
-
-
 MEDIUM_SALOON,
 LARGE_SALOON
 
@@ -12,11 +14,18 @@ LARGE_SALOON
 
 typedef struct ConferenceHall{
     int id;
-    char *hallName;
+    char hallName[100];
     int capacity;
     bool (*isHallFull)(struct ConferenceHall *self,int date, int hour);
     
 }ConferenceHall;
 
 
+ConferenceHall createConferenceHall(int id,char *hallName, int capacity);
+ConferenceHall updateConferenceHall(int newId, char *newHallName, int newCapacity); //kendim
+int setPriceAccToCapacity(saloonsType saloonsType, int price); //kendim
+
 bool isHallFull(struct ConferenceHall *self,int date, int hour); //bu tanım, süslü parantez açarsam method olur
+
+
+#endif
