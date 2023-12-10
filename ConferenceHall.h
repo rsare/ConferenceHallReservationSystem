@@ -15,15 +15,15 @@ LARGE_SALOON
 typedef struct ConferenceHall{
     int id;
     char hallName[100];
-    int capacity;
+    saloonsType capacity;
     bool (*isHallFull)(struct ConferenceHall *self,int date, int hour);
     
 }ConferenceHall;
 
 
-ConferenceHall createConferenceHall(int id,char *hallName, int capacity);
+ConferenceHall createConferenceHall(int id,char *hallName, saloonsType capacity);
 ConferenceHall updateConferenceHall(int newId, char *newHallName, int newCapacity); //kendim
-int setPriceAccToCapacity(saloonsType saloonsType, int price); //kendim
+int setPriceAccToCapacity(saloonsType saloonsType); //kendim
 
 bool isHallFull(struct ConferenceHall *self,int date, int hour); //bu tanım, süslü parantez açarsam method olur
 

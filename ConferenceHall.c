@@ -18,7 +18,7 @@ bool isHallFull(struct ConferenceHall *self, int date, int hour)
 }
 
 int idCH = 20;
-struct ConferenceHall createConferenceHall(int id, char *hallName, int capacity)
+struct ConferenceHall createConferenceHall(int id, char *hallName, saloonsType capacity)
 {
 
     ConferenceHall ch1;
@@ -44,9 +44,9 @@ struct ConferenceHall updateConferenceHall(int newId, char *newHallName, int new
     saloonsKnowledge[newId - idCH] = updateConferenceHall;
 }
 
-int setPriceAccToCapacity(saloonsType saloonsType, int price)
+int setPriceAccToCapacity(saloonsType saloonsType)
 {
-    price = 500;
+    int price = 500;
     if (saloonsType == 0)
     {
         price += 100;
