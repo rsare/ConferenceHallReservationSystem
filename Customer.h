@@ -14,6 +14,7 @@ typedef struct Customer
     
 }Customer;
 
+int isUsernameTaken(const char *username);
 Customer createCustomer(int id, char *name, char *surname, char *password, char *username, bool isAdmin);
 struct Reservation *getAllReservations(Customer *customer);
 

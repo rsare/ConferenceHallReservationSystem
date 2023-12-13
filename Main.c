@@ -6,13 +6,11 @@
 #include "ConferenceHall.c"
 #include "Reservation.c"
 
-
 int main()
 {
   readConferenceHall();
   readCustomer();
   readReservation();
-  printf("%d\n", conferenceHallCount);
   Customer *account;
   // ConferenceHall conferenceHall;
   saloonsType saloonType;
@@ -45,8 +43,10 @@ int main()
       printf("3 - Click 3 to create a new conference hall.\n");
       printf("4 - Click 4 to update a reservation.\n");
       printf("5 - Click 5 to delete a reservation.\n");
-      printf("6 - Click 6 to see total profit.\n");
-      printf("7 - Click 7 to log out.\n");
+      printf("6 - Click 6 to delete a customer.\n");
+      printf("7 - Click 7 to delete a conference hall.\n");
+      printf("8 - Click 8 to see total profit.\n");
+      printf("9 - Click 9 to log out.\n");
       scanf("%d", &choice);
       switch (choice)
       {
@@ -79,6 +79,7 @@ int main()
         scanf("%d", &index);
         createReservation((resId + reservationCount), setPriceAccToCapacity(saloonType), purpose, date, hour, customers[choice - 1], saloonsKnowledge[index - 1]);
         writeReservation(reservations[reservationCount - 1]);
+        printf("Customer's reservation created successfully.\n");
         break;
       case 2:
         printf("Please enter customer's name :\n");
@@ -148,20 +149,43 @@ int main()
         }
         printf("Please select reservation which you want to delete :\n");
         scanf("%d", &choice);
-        deleteReservetion(&reservations[choice - 1], reservations[choice - 1].reservationId);
+        deleteReservation(&reservations[choice - 1], reservations[choice - 1].reservationId);
         printf("Your reservation deleted successfuly... We wait again.");
         break;
       case 6:
-        CALCULATE_TOTAL_PROFIT(reservations, reservationCount);
+        for (int i = 0; i < customerCount; i++)
+        {
+          printf("\n%d - Customer's Name Surname : %s  %s / Customer ID : %d\n", (i + 1), customers[i].name, customers[i].surname, customers[i].id);
+        }
+        printf("Please select customer which you want to delete :\n");
+        scanf("%d", &choice);
+        deleteFromFile(customers[choice - 1].id);
+        readCustomer();
+        printf("Selected customer deleted successfuly... We wait again.");
+
         break;
       case 7:
-        account = NULL;
+        for (int i = 0; i < conferenceHallCount; i++)
+        {
+          printf("\n%d - Conference Hall Name  : %s  / Conference Hall ID : %d\n", (i + 1), saloonsKnowledge[i].hallName, saloonsKnowledge[i].id);
+        }
+        printf("Please select conference hall which you want to delete :\n");
+        scanf("%d", &choice);
+        deleteConferenceHall(saloonsKnowledge[choice-1].id);
+        printf("Conference hall deleted successfuly...");
+        break;
+
+      default:
+        break;
+      case 8:
+       CALCULATE_TOTAL_PROFIT(reservations, reservationCount);
+        break;
+        case 9:
+         account = NULL;
         isLoggedIn = 0;
         printf("You logged out successfuly...\n");
         printf("\n--------------WE WAIT AGAIN--------------\n");
         // main();
-
-      default:
         break;
       }
     }
@@ -174,6 +198,10 @@ int main()
       printf("3 - Click 3 to update a reservation.\n");
       printf("4 - Click 4 to delete a reservation.\n");
       printf("5 - Click 5 to log out.\n");
+
+      printf("Your choice : ");
+      fflush(stdin);
+      scanf("%d", &choice);
 
       switch (choice)
       {
@@ -196,7 +224,7 @@ int main()
         fflush(stdin);
         scanf("%d", &index);
         createReservation((resId + reservationCount), setPriceAccToCapacity(saloonType), purpose, date, hour, *account, saloonsKnowledge[index]);
-        writeReservation(reservations[reservationCount-1]);
+        writeReservation(reservations[reservationCount - 1]);
         break;
       case 2:
         myResCount = 1;
@@ -242,6 +270,7 @@ int main()
             }
           }
           printf("Reservation updated successfuly.\n");
+          break;
         }
         else
         {
@@ -268,7 +297,7 @@ int main()
           }
           else if (reservations[i].customer.id == account->id && choice == 1)
           {
-            deleteReservetion(&reservations[i], reservations[i].reservationId);
+            deleteReservation(&reservations[i], reservations[i].reservationId);
           }
         }
 
@@ -283,6 +312,8 @@ int main()
         break;
 
       default:
+        printf("Invalid choice. Please try again.\n");
+
         break;
       }
     }
@@ -324,6 +355,7 @@ int main()
         scanf("%s", password);
         printf("Please enter your username : \n");
         scanf("%s", username);
+
         createCustomer((idC + customerCount), customerName, customerSurname, password, username, 0); //??
 
         break;

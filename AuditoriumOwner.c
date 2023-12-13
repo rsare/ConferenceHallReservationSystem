@@ -148,6 +148,51 @@ void readCustomer()
 
    fclose(file);
 }
+
+void deleteFromFile(int customerId)
+{
+   FILE *file = fopen("Customer.bin", "rb");
+   if (file == NULL)
+   {
+      perror("File could not be opened !");
+      exit(EXIT_FAILURE);
+   }
+
+   FILE *tempFile = fopen("temp.bin", "wb");
+   if (tempFile == NULL)
+   {
+      perror("Temp file could not be created!");
+      fclose(file);
+      exit(EXIT_FAILURE);
+   }
+
+   Customer currentCustomer;
+
+   while (fread(&currentCustomer, sizeof(Customer), 1, file) == 1)
+   {
+      if (currentCustomer.id != customerId)
+      {
+         fwrite(&currentCustomer, sizeof(Customer), 1, tempFile);
+      }
+   }
+
+   fclose(file);
+   fclose(tempFile);
+
+   if (remove("Customer.bin") != 0)
+   {
+      perror("Original file could not be deleted");
+      exit(EXIT_FAILURE);
+   }
+
+   if (rename("temp.bin", "Customer.bin") != 0)
+   {
+      perror("Could not name temp file");
+      exit(EXIT_FAILURE);
+   }
+
+   printf("Customer successfully deleted.\n");
+}
 void writeReservation(Reservation reserv)
 {
 
@@ -189,4 +234,16 @@ void readReservation()
    }
 
    fclose(file);
+}
+
+int findCustomerIndex(int id)
+{
+   for (int i = 0; i < customerCount; i++)
+   {
+      if (id == customers[i].id)
+      {
+         return i;
+      }
+   }
+   return -1; //NEDEN ÇALDIM DSFJKSDFHSDJFSDJF
 }

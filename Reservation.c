@@ -32,7 +32,7 @@ struct Reservation updateReservation(Reservation *reservation, int newDate, int 
     return *reservation;
 }
 
-void deleteReservetion(Reservation reservations[], int deletedResId)
+void deleteReservation(Reservation reservations[], int deletedResId)
 {
 
     for (int i = 0; i < reservationCount; i++)
