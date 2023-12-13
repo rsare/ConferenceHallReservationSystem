@@ -4,6 +4,15 @@
 #include "ConferenceHall.h"
 // #include "AuditoriumOwner.c"
 
+
+static const char *const saloons_Type[] = {
+    [SMALL_SALOON] = "Small Saloon",
+    [MEDIUM_SALOON] = "Medium Saloon",
+    [LARGE_SALOON] = "Large Saloon",
+    };
+
+
+
 bool isHallFull(struct ConferenceHall *self, int date, int hour)
 {
     for (int i = 0; i < reservationCount; i++)
@@ -62,3 +71,5 @@ int setPriceAccToCapacity(saloonsType saloonsType)
 
     return price;
 }
+
+

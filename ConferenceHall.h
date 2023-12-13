@@ -22,8 +22,8 @@ typedef struct ConferenceHall{
 
 
 ConferenceHall createConferenceHall(int id,char *hallName, saloonsType capacity);
-ConferenceHall updateConferenceHall(int newId, char *newHallName, int newCapacity); //kendim
-int setPriceAccToCapacity(saloonsType saloonsType); //kendim
+ConferenceHall updateConferenceHall(int newId, char *newHallName, int newCapacity); 
+int setPriceAccToCapacity(saloonsType saloonsType); 
 
 bool isHallFull(struct ConferenceHall *self,int date, int hour); //bu tanım, süslü parantez açarsam method olur
 

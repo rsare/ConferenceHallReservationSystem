@@ -1,6 +1,5 @@
 #ifndef RESERVATION_H
 #define RESERVATION_H
-
 #include "Customer.h"
 #include "ConferenceHall.h"
 
@@ -19,7 +18,7 @@ typedef struct Reservation
 }Reservation;
 
 Reservation createReservation(int reservationId, int price, char *purpose, int date, int hour, Customer customer, ConferenceHall conferenceHall);
-Reservation updateReservation(int newReservationId, int newDate, int newHour); //kendim
+Reservation updateReservation(Reservation *reservation, int newDate, int newHour); //kendim
 void deleteReservetion(Reservation reservations[], int deletedResId);
 
 #endif

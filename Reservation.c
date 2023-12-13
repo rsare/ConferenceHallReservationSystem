@@ -23,17 +23,13 @@ struct Reservation createReservation(int reservationId, int price, char *purpose
     return reservation;
 }
 
-struct Reservation updateReservation(int newReservationId, int newDate, int newHour)
-{ // kendim
+struct Reservation updateReservation(Reservation *reservation, int newDate, int newHour)
+{ 
 
-    Reservation updateReservation;
-    updateReservation.reservationId = newReservationId;
-    updateReservation.date = newDate;
-    updateReservation.hour = newHour;
+    reservation->date = newDate;
+    reservation->hour = newHour;
 
-    reservations[newReservationId - resId] = updateReservation;
-
-    return updateReservation;
+    return *reservation;
 }
 
 void deleteReservetion(Reservation reservations[], int deletedResId)
