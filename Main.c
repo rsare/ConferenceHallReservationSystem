@@ -14,7 +14,7 @@ int main()
   Customer *account;
   // ConferenceHall conferenceHall;
   saloonsType saloonType;
-  createCustomer(100, "Ali", "Nizam", "123", "ali", true);
+  createCustomer(100, "Admin", "Admin", "123", "admin", true);
   char customerName[50];
   char customerSurname[50];
   char customerMail[50];
@@ -27,6 +27,8 @@ int main()
   int option;
   int isLoggedIn = 0;
   int myResCount = 1;
+  int reservCount = 1;
+  int flag = 0;
 
   while (true)
   {
@@ -46,7 +48,9 @@ int main()
       printf("6 - Click 6 to delete a customer.\n");
       printf("7 - Click 7 to delete a conference hall.\n");
       printf("8 - Click 8 to see total profit.\n");
-      printf("9 - Click 9 to log out.\n");
+      printf("9 - Click 9 to see all reservations.\n");
+      printf("10 - Click 10 to log out. \n");
+      fflush(stdin);
       scanf("%d", &choice);
       switch (choice)
       {
@@ -68,18 +72,41 @@ int main()
         }
         printf("Your choice : ");
         fflush(stdin);
-        scanf("%d", &choice);
-        printf("Please choose a saloon :\n");
-        for (int i = 0; i < conferenceHallCount; i++)
-        {
-          printf("%d - Saloon Knowledge : %s , %s \n", (i + 1), saloonsKnowledge[i].hallName, saloons_Type[saloonsKnowledge[i].capacity]);
-        }
-        printf("Your choice : ");
-        fflush(stdin);
         scanf("%d", &index);
-        createReservation((resId + reservationCount), setPriceAccToCapacity(saloonType), purpose, date, hour, customers[choice - 1], saloonsKnowledge[index - 1]);
-        writeReservation(reservations[reservationCount - 1]);
-        printf("Customer's reservation created successfully.\n");
+
+        if (index < 1 || index > conferenceHallCount)
+        {
+          printf("Invalid choice. Conference hall does not exist.\n");
+        }
+        else
+        {
+          // printf("Your choice : ");
+          // fflush(stdin);
+          scanf("%d", &choice);
+          printf("\nPlease choose a saloon :\n");
+          for (int i = 0; i < conferenceHallCount; i++)
+          {
+            printf("%d - Saloon Knowledge : %s , %s \n", (i + 1), saloonsKnowledge[i].hallName, saloons_Type[saloonsKnowledge[i].capacity]);
+          }
+          printf("\nYour choice : ");
+          fflush(stdin);
+          scanf("%d", &index);
+          createReservation((resId + reservationCount), setPriceAccToCapacity(saloonType), purpose, date, hour, customers[choice - 1], saloonsKnowledge[index - 1]);
+          writeReservation(reservations[reservationCount - 1]);
+          printf("\nCustomer's reservation created successfully.\n");
+        }
+
+        /*printf("Your choice : ");
+         fflush(stdin);
+         scanf("%d", &choice);
+         printf("Please choose a saloon :\n");
+         for (int i = 0; i < conferenceHallCount; i++)
+         {
+           printf("%d - Saloon Knowledge : %s , %s \n", (i + 1), saloonsKnowledge[i].hallName, saloons_Type[saloonsKnowledge[i].capacity]);
+         }
+         printf("Your choice : ");
+         fflush(stdin);
+         scanf("%d", &index);*/
         break;
       case 2:
         printf("Please enter customer's name :\n");
@@ -115,7 +142,8 @@ int main()
         }
         createConferenceHall((idCH + conferenceHallCount), hallName, saloonType);
         writeConferenceHall(saloonsKnowledge[conferenceHallCount - 1]);
-        printf("Conferecence Hall Created Successfuly.\n");
+        printf("\nCreated saloon name : %s \n", hallName);
+        printf("\nConferecence Hall Created Successfuly.\n");
         break;
       case 4:
 
@@ -147,6 +175,11 @@ int main()
         {
           printf("\n%d - Reservation's Owner Name Surname : %s  %s / Reservation ID : %d\n", (i + 1), reservations[i].customer.name, reservations[i].customer.surname, reservations[i].reservationId);
         }
+        if (reservationCount == 0)
+        {
+          printf("No reservations to delete were found !!\n");
+          return 0;
+        }
         printf("Please select reservation which you want to delete :\n");
         scanf("%d", &choice);
         deleteReservation(&reservations[choice - 1], reservations[choice - 1].reservationId);
@@ -171,17 +204,36 @@ int main()
         }
         printf("Please select conference hall which you want to delete :\n");
         scanf("%d", &choice);
-        deleteConferenceHall(saloonsKnowledge[choice-1].id);
+        deleteConferenceHall(saloonsKnowledge[choice - 1].id);
         printf("Conference hall deleted successfuly...");
         break;
 
       default:
         break;
       case 8:
-       CALCULATE_TOTAL_PROFIT(reservations, reservationCount);
+        CALCULATE_TOTAL_PROFIT(reservations, reservationCount);
         break;
-        case 9:
-         account = NULL;
+      case 9:
+        for (int i = 0; i < reservCount; i++)
+        {
+          if (reservations[i].customer.id == account->id)
+          {
+            printf("\n%d - Reservation's Owner Name Surname : %s  %s / Reservation ID : %d\n",
+                   (i + 1), reservations[i].customer.name, reservations[i].customer.surname, reservations[i].reservationId);
+            flag = 1;
+            reservCount++;
+          }
+        }
+
+        if (flag == 0)
+        {
+          printf("You don't have any reservation.\n");
+        }
+
+        break;
+      case 10:
+
+        account = NULL;
         isLoggedIn = 0;
         printf("You logged out successfuly...\n");
         printf("\n--------------WE WAIT AGAIN--------------\n");
@@ -228,13 +280,19 @@ int main()
         break;
       case 2:
         myResCount = 1;
+        bool flag = 0;
         for (int i = 0; i < reservationCount; i++)
         {
           if (reservations[i].customer.id == account->id)
           {
             printf("\n%d - Reservation's Owner Name Surname : %s  %s / Reservation ID : %d\n", myResCount, reservations[i].customer.name, reservations[i].customer.surname, reservations[i].reservationId);
+            flag = 1;
             myResCount++;
           }
+        }
+        if (flag == 0)
+        {
+          printf("You don't have any reservation");
         }
 
         break;

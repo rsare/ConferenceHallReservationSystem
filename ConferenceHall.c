@@ -42,7 +42,7 @@ struct ConferenceHall createConferenceHall(int id, char *hallName, saloonsType c
 }
 
 struct ConferenceHall updateConferenceHall(int newId, char *newHallName, int newCapacity)
-{ // kendim
+{ 
 
     ConferenceHall updateConferenceHall;
 

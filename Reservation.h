@@ -18,7 +18,9 @@ typedef struct Reservation
 }Reservation;
 
 Reservation createReservation(int reservationId, int price, char *purpose, int date, int hour, Customer customer, ConferenceHall conferenceHall);
-Reservation updateReservation(Reservation *reservation, int newDate, int newHour); //kendim
+Reservation updateReservation(Reservation *reservation, int newDate, int newHour); 
 void deleteReservation(Reservation reservations[], int deletedResId);
+
+
 
 #endif

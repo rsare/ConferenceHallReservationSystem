@@ -67,11 +67,33 @@ void readConferenceHall()
    fclose(file);
 }
 
+void readReservation()
+{
+   reservationCount = 0;
+   FILE *file = fopen("Reservation.bin", "rb");
+
+   if (file == NULL)
+   {
+      printf("Error opening file for writing.\n");
+      return;
+   }
+
+   int i = 0;
+   while (fread(&reservations[i], sizeof(Reservation), 1, file) != 0)
+   {
+      i++;
+      reservationCount++;
+   }
+
+   fclose(file);
+}
+
 void deleteConferenceHall(int confHallId)
 {
    FILE *tempFile = fopen("Temp.bin", "ab");
+   FILE *tempFile2 = fopen("Temporary.bin", "ab");
 
-   if (tempFile == NULL)
+   if (tempFile == NULL || tempFile2 == NULL)
    {
       printf("Error opening file for writing.\n");
       return;
@@ -89,7 +111,21 @@ void deleteConferenceHall(int confHallId)
    fclose(tempFile);
    remove("ConferenceHall.bin");
    rename("Temp.bin", "ConferenceHall.bin");
+
+   for (int i = 0; i < reservationCount; i++)
+   {
+      if (reservations[i].conferenceHall.id == confHallId)
+      {
+         reservationCount--;
+         continue;
+      }
+      fwrite(&reservations, sizeof(Reservation), 1, tempFile2);
+   }
+   fclose(tempFile2);
+   remove("Reservation.bin");
+   rename("Temporary.bin", "Reservation.bin");
    readConferenceHall(); // yeniden okuması için
+   readReservation();
 }
 
 Customer *login(char *username, char *password) // NULL sadece pointerlar için C'de
@@ -159,7 +195,8 @@ void deleteFromFile(int customerId)
    }
 
    FILE *tempFile = fopen("temp.bin", "wb");
-   if (tempFile == NULL)
+   FILE *tempFile2 = fopen("temporary.bin", "wb");
+   if (tempFile == NULL || tempFile2 == NULL)
    {
       perror("Temp file could not be created!");
       fclose(file);
@@ -191,6 +228,19 @@ void deleteFromFile(int customerId)
       exit(EXIT_FAILURE);
    }
 
+   for (int i = 0; i < customerCount; i++)
+   {
+      if (reservations[i].customer.id == customerId)
+      {
+         reservationCount--;
+         continue;
+      }
+      fwrite(&reservations, sizeof(Reservation), 1, tempFile2);
+   }
+   fclose(tempFile2);
+   remove("Reservation.bin");
+   rename("Temporary.bin", "Reservation.bin");
+
    printf("Customer successfully deleted.\n");
 }
 void writeReservation(Reservation reserv)
@@ -215,27 +265,6 @@ void writeReservation(Reservation reserv)
    }
 }
 
-void readReservation()
-{
-   reservationCount = 0;
-   FILE *file = fopen("Reservation.bin", "rb");
-
-   if (file == NULL)
-   {
-      printf("Error opening file for writing.\n");
-      return;
-   }
-
-   int i = 0;
-   while (fread(&reservations[i], sizeof(Reservation), 1, file) != 0)
-   {
-      i++;
-      reservationCount++;
-   }
-
-   fclose(file);
-}
-
 int findCustomerIndex(int id)
 {
    for (int i = 0; i < customerCount; i++)
@@ -245,5 +274,21 @@ int findCustomerIndex(int id)
          return i;
       }
    }
-   return -1; //NEDEN ÇALDIM DSFJKSDFHSDJFSDJF
+   return -1;
+}
+
+void displayAllReservations(const Reservation *reservations, int reservationCount) {
+ 
+ int flag = 0;
+
+    for (int i = 0; i < reservationCount; i++) {
+        printf("\n%d - Reservation's Owner Name Surname : %s  %s / Reservation ID : %d\n",
+               reservationCount, reservations[i].customer.name, reservations[i].customer.surname, reservations[i].reservationId);
+        flag = 1;
+        reservationCount++;
+    }
+
+    if (flag == 0) {
+        printf("There are no reservations available.\n");
+    }
 }
